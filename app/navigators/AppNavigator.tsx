@@ -30,6 +30,7 @@ import { colors } from "app/theme"
 export type AppStackParamList = {
   Green: undefined
   // 🔥 Your screens go here
+  Color: undefined
   // IGNITE_GENERATOR_ANCHOR_APP_STACK_PARAM_LIST
 }
 
@@ -46,13 +47,12 @@ export type AppStackScreenProps<T extends keyof AppStackParamList> = NativeStack
 
 // Documentation: https://reactnavigation.org/docs/stack-navigator/
 const Stack = createNativeStackNavigator<AppStackParamList>()
-const GreenScreen = <View style={GREEN_SCREEN} />
 
 const AppStack = observer(function AppStack () {
   return (
     <Stack.Navigator screenOptions={{ headerShown: false, navigationBarColor: colors.background }}>
-      <Stack.Screen name='Green' component={GreenScreen} />
       {/** 🔥 Your screens go here */}
+      <Stack.Screen name='Color' component={Screens.ColorScreen} />
       {/* IGNITE_GENERATOR_ANCHOR_APP_STACK_SCREENS */}
     </Stack.Navigator>
   )
