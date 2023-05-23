@@ -28,9 +28,9 @@ import { colors } from "app/theme"
  *   https://reactnavigation.org/docs/typescript/#organizing-types
  */
 export type AppStackParamList = {
-  Green: undefined
   // 🔥 Your screens go here
   Color: undefined
+  Wallet: undefined
   // IGNITE_GENERATOR_ANCHOR_APP_STACK_PARAM_LIST
 }
 
@@ -53,6 +53,7 @@ const AppStack = observer(function AppStack () {
     <Stack.Navigator screenOptions={{ headerShown: false, navigationBarColor: colors.background }}>
       {/** 🔥 Your screens go here */}
       <Stack.Screen name='Color' component={Screens.ColorScreen} />
+      <Stack.Screen name='Wallet' component={Screens.WalletScreen} />
       {/* IGNITE_GENERATOR_ANCHOR_APP_STACK_SCREENS */}
     </Stack.Navigator>
   )
