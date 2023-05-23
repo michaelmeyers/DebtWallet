@@ -9,15 +9,15 @@ import { Screen, Text } from "app/components"
 
 interface WalletScreenProps extends NativeStackScreenProps<AppStackScreenProps<"Wallet">> {}
 
-export const WalletScreen: FC<WalletScreenProps> = observer(function WalletScreen() {
+export const WalletScreen: FC<WalletScreenProps> = observer(function WalletScreen () {
   // Pull in one of our MST stores
   // const { someStore, anotherStore } = useStores()
 
   // Pull in navigation via hook
   // const navigation = useNavigation()
   return (
-    <Screen style={$root} preset="scroll">
-      <Text text="wallet" />
+    <Screen style={$root} preset='scroll'>
+      <Text text='wallet' />
     </Screen>
   )
 })

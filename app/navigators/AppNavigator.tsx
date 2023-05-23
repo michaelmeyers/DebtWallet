@@ -78,9 +78,7 @@ const TabStack = createBottomTabNavigator<TabStackParamList>()
 
 const AppStack = observer(function AppStack () {
   return (
-    <TabStack.Navigator
-      screenOptions={{ headerShown: false, navigationBarColor: colors.background }}
-    >
+    <TabStack.Navigator screenOptions={{ headerShown: false }}>
       {/** 🔥 Your screens go here */}
       <TabStack.Screen name='Wallets' component={WalletsNav} />
       <TabStack.Screen name='Colors' component={ColorsNav} />

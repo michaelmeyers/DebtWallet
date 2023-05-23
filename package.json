@@ -22,10 +22,7 @@
     "release:android": "cd android && rm -rf app/src/main/res/drawable-* && ./gradlew assembleRelease && cd - && echo 'APK generated in ./android/app/build/outputs/apk/release/app-release.apk'",
     "clean": "npx react-native-clean-project",
     "clean-all": "npx react-native clean-project-auto",
-    "expo:start": "expo start",
-    "expo:android": "expo start --android",
-    "expo:ios": "expo start --ios",
-    "expo:web": "expo start --web"
+    "ios:i": "npm i; cd ios; pod install; cd .."
   },
   "overrides": {
     "react-error-overlay": "6.0.9"
@@ -33,6 +30,9 @@
   "dependencies": {
     "@expo-google-fonts/space-grotesk": "^0.2.2",
     "@expo/webpack-config": "^18.0.1",
+    "@fortawesome/react-native-fontawesome": "^0.3.0",
+    "@fortawesome/fontawesome-svg-core": "^6.4.0",
+    "react-native-svg": "^13.9.0",
     "@react-native-async-storage/async-storage": "1.17.11",
     "@react-navigation/bottom-tabs": "^6.3.2",
     "@react-navigation/native": "^6.0.2",
