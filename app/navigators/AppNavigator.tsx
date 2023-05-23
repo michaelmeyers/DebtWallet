@@ -13,6 +13,7 @@ import * as Screens from "app/screens"
 import Config from "../config"
 import { navigationRef, useBackButtonHandler } from "./navigationUtilities"
 import { colors } from "app/theme"
+import { createBottomTabNavigator } from "@react-navigation/bottom-tabs"
 
 /**
  * This type allows TypeScript to know what routes are defined in this navigator
@@ -27,6 +28,10 @@ import { colors } from "app/theme"
  *   https://reactnavigation.org/docs/typescript#type-checking-the-navigator
  *   https://reactnavigation.org/docs/typescript/#organizing-types
  */
+export type TabStackParamList = {
+  Wallets: undefined
+  Colors: undefined
+}
 export type AppStackParamList = {
   // 🔥 Your screens go here
   Color: undefined
@@ -46,16 +51,42 @@ export type AppStackScreenProps<T extends keyof AppStackParamList> = NativeStack
 >
 
 // Documentation: https://reactnavigation.org/docs/stack-navigator/
-const Stack = createNativeStackNavigator<AppStackParamList>()
+const ColorStack = createNativeStackNavigator<AppStackParamList>()
+const ColorsNav = observer(function AppStack () {
+  return (
+    <ColorStack.Navigator
+      screenOptions={{ headerShown: false, navigationBarColor: colors.background }}
+    >
+      {/** 🔥 Your screens go here */}
+      <ColorStack.Screen name='Color' component={Screens.ColorScreen} />
+      {/* IGNITE_GENERATOR_ANCHOR_APP_STACK_SCREENS */}
+    </ColorStack.Navigator>
+  )
+})
+const WalletsStack = createNativeStackNavigator<AppStackParamList>()
+const WalletsNav = observer(function AppStack () {
+  return (
+    <WalletsStack.Navigator
+      screenOptions={{ headerShown: false, navigationBarColor: colors.background }}
+    >
+      {/** 🔥 Your screens go here */}
+      <WalletsStack.Screen name='Wallet' component={Screens.WalletScreen} />
+      {/* IGNITE_GENERATOR_ANCHOR_APP_STACK_SCREENS */}
+    </WalletsStack.Navigator>
+  )
+})
+const TabStack = createBottomTabNavigator<TabStackParamList>()
 
 const AppStack = observer(function AppStack () {
   return (
-    <Stack.Navigator screenOptions={{ headerShown: false, navigationBarColor: colors.background }}>
+    <TabStack.Navigator
+      screenOptions={{ headerShown: false, navigationBarColor: colors.background }}
+    >
       {/** 🔥 Your screens go here */}
-      <Stack.Screen name='Color' component={Screens.ColorScreen} />
-      <Stack.Screen name='Wallet' component={Screens.WalletScreen} />
+      <TabStack.Screen name='Wallets' component={WalletsNav} />
+      <TabStack.Screen name='Colors' component={ColorsNav} />
       {/* IGNITE_GENERATOR_ANCHOR_APP_STACK_SCREENS */}
-    </Stack.Navigator>
+    </TabStack.Navigator>
   )
 })
 
