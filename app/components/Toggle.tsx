@@ -1,4 +1,4 @@
-import React, { ComponentType, FC, useMemo } from "react"
+import React, { ComponentType, FC, ReactElement, useMemo } from "react"
 import {
   GestureResponderEvent,
   Image,
@@ -14,7 +14,6 @@ import {
 } from "react-native"
 import Animated, { useAnimatedStyle, withTiming } from "react-native-reanimated"
 import { colors, spacing } from "../theme"
-import { iconRegistry, IconTypes } from "./Icon"
 import { Text, TextProps } from "./Text"
 
 type Variants = "checkbox" | "switch" | "radio"
@@ -114,7 +113,7 @@ interface CheckboxToggleProps extends BaseToggleProps {
   /**
    * Checkbox-only prop that changes the icon used for the "on" state.
    */
-  checkboxIcon?: IconTypes
+  checkboxIcon?: ReactElement
 }
 
 interface RadioToggleProps extends BaseToggleProps {
@@ -157,7 +156,7 @@ interface ToggleInputProps {
  *
  * - [Documentation and Examples](https://github.com/infinitered/ignite/blob/master/docs/Components-Toggle.md)
  */
-export function Toggle(props: ToggleProps) {
+export function Toggle (props: ToggleProps) {
   const {
     variant = "checkbox",
     editable = true,
@@ -194,7 +193,7 @@ export function Toggle(props: ToggleProps) {
     HelperTextProps?.style,
   ]
 
-  function handlePress(e: GestureResponderEvent) {
+  function handlePress (e: GestureResponderEvent) {
     if (disabled) return
     onValueChange?.(!value)
     onPress?.(e)
@@ -228,7 +227,7 @@ export function Toggle(props: ToggleProps) {
 
       {!!(helper || helperTx) && (
         <Text
-          preset="formHelper"
+          preset='formHelper'
           text={helper}
           tx={helperTx}
           txOptions={helperTxOptions}
@@ -246,7 +245,7 @@ const ToggleInputs: Record<Variants, FC<ToggleInputProps>> = {
   radio: Radio,
 }
 
-function Checkbox(props: ToggleInputProps) {
+function Checkbox (props: ToggleInputProps) {
   const {
     on,
     status,
@@ -298,16 +297,13 @@ function Checkbox(props: ToggleInputProps) {
           useAnimatedStyle(() => ({ opacity: withTiming(on ? 1 : 0) }), [on]),
         ]}
       >
-        <Image
-          source={iconRegistry[checkboxIcon] || iconRegistry.check}
-          style={[$checkboxDetail, { tintColor: iconTintColor }, $detailStyleOverride]}
-        />
+        <Image style={[$checkboxDetail, { tintColor: iconTintColor }, $detailStyleOverride]} />
       </Animated.View>
     </View>
   )
 }
 
-function Radio(props: ToggleInputProps) {
+function Radio (props: ToggleInputProps) {
   const {
     on,
     status,
@@ -366,7 +362,7 @@ function Radio(props: ToggleInputProps) {
   )
 }
 
-function Switch(props: ToggleInputProps) {
+function Switch (props: ToggleInputProps) {
   const {
     on,
     status,
@@ -379,11 +375,11 @@ function Switch(props: ToggleInputProps) {
   const knobSizeFallback = 2
 
   const knobWidth = [$detailStyleOverride?.width, $switchDetail?.width, knobSizeFallback].find(
-    (v) => typeof v === "number",
+    v => typeof v === "number",
   )
 
   const knobHeight = [$detailStyleOverride?.height, $switchDetail?.height, knobSizeFallback].find(
-    (v) => typeof v === "number",
+    v => typeof v === "number",
   )
 
   const offBackgroundColor = [
@@ -452,8 +448,8 @@ function Switch(props: ToggleInputProps) {
         ]}
       />
 
-      <SwitchAccessibilityLabel {...props} role="on" />
-      <SwitchAccessibilityLabel {...props} role="off" />
+      <SwitchAccessibilityLabel {...props} role='on' />
+      <SwitchAccessibilityLabel {...props} role='off' />
 
       <Animated.View
         style={[
@@ -468,7 +464,7 @@ function Switch(props: ToggleInputProps) {
   )
 }
 
-function SwitchAccessibilityLabel(props: ToggleInputProps & { role: "on" | "off" }) {
+function SwitchAccessibilityLabel (props: ToggleInputProps & { role: "on" | "off" }) {
   const { on, disabled, status, switchAccessibilityMode, role, innerStyle, detailStyle } = props
 
   if (!switchAccessibilityMode) return null
@@ -511,7 +507,7 @@ function SwitchAccessibilityLabel(props: ToggleInputProps & { role: "on" | "off"
   )
 }
 
-function FieldLabel(props: BaseToggleProps) {
+function FieldLabel (props: BaseToggleProps) {
   const {
     status,
     label,
@@ -535,7 +531,7 @@ function FieldLabel(props: BaseToggleProps) {
 
   return (
     <Text
-      preset="formLabel"
+      preset='formLabel'
       text={label}
       tx={labelTx}
       txOptions={labelTxOptions}

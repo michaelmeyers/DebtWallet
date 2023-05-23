@@ -10,7 +10,6 @@ import {
 import { isRTL, translate } from "../i18n"
 import { colors, spacing } from "../theme"
 import { ExtendedEdge, useSafeAreaInsetsStyle } from "../utils/useSafeAreaInsetsStyle"
-import { Icon, IconTypes } from "./Icon"
 import { Text, TextProps } from "./Text"
 
 export interface HeaderProps {
@@ -142,7 +141,7 @@ interface HeaderActionProps {
  *
  * - [Documentation and Examples](https://github.com/infinitered/ignite/blob/master/docs/Components-Header.md)
  */
-export function Header(props: HeaderProps) {
+export function Header (props: HeaderProps) {
   const {
     backgroundColor = colors.background,
     LeftActionComponent,
@@ -195,11 +194,11 @@ export function Header(props: HeaderProps) {
               titleMode === "flex" && $titleWrapperFlex,
               $titleContainerStyleOverride,
             ]}
-            pointerEvents="none"
+            pointerEvents='none'
           >
             <Text
-              weight="medium"
-              size="md"
+              weight='medium'
+              size='md'
               text={titleContent}
               style={[$title, $titleStyleOverride]}
             />
@@ -221,7 +220,7 @@ export function Header(props: HeaderProps) {
   )
 }
 
-function HeaderAction(props: HeaderActionProps) {
+function HeaderAction (props: HeaderActionProps) {
   const { backgroundColor, icon, text, tx, txOptions, onPress, ActionComponent, iconColor } = props
 
   const content = tx ? translate(tx, txOptions) : text
@@ -236,7 +235,7 @@ function HeaderAction(props: HeaderActionProps) {
         disabled={!onPress}
         activeOpacity={0.8}
       >
-        <Text weight="medium" size="md" text={content} style={$actionText} />
+        <Text weight='medium' size='md' text={content} style={$actionText} />
       </TouchableOpacity>
     )
   }

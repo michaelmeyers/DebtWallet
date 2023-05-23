@@ -5,8 +5,6 @@ import { spacing } from "../theme"
 import { Button, ButtonProps } from "./Button"
 import { Text, TextProps } from "./Text"
 
-const sadFace = require("../../assets/images/sad-face.png")
-
 interface EmptyStateProps {
   /**
    * An optional prop that specifies the text/image set to use for the empty state.
@@ -103,7 +101,6 @@ interface EmptyStateProps {
 
 const EmptyStatePresets = {
   generic: {
-    imageSource: sadFace,
     heading: translate("emptyStateComponent.generic.heading"),
     content: translate("emptyStateComponent.generic.content"),
     button: translate("emptyStateComponent.generic.button"),
@@ -115,7 +112,7 @@ const EmptyStatePresets = {
  *
  * - [Documentation and Examples](https://github.com/infinitered/ignite/blob/master/docs/Components-EmptyState.md)
  */
-export function EmptyState(props: EmptyStateProps) {
+export function EmptyState (props: EmptyStateProps) {
   const preset = EmptyStatePresets[props.preset] ? EmptyStatePresets[props.preset] : undefined
 
   const {
@@ -180,7 +177,7 @@ export function EmptyState(props: EmptyStateProps) {
 
       {isHeadingPresent && (
         <Text
-          preset="subheading"
+          preset='subheading'
           text={heading}
           tx={headingTx}
           txOptions={headingTxOptions}

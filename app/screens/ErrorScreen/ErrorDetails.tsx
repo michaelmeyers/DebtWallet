@@ -1,6 +1,6 @@
 import React, { ErrorInfo } from "react"
 import { ScrollView, TextStyle, View, ViewStyle } from "react-native"
-import { Button, Icon, Screen, Text } from "../../components"
+import { Button, Screen, Text } from "../../components"
 import { colors, spacing } from "../../theme"
 
 export interface ErrorDetailsProps {
@@ -9,21 +9,20 @@ export interface ErrorDetailsProps {
   onReset(): void
 }
 
-export function ErrorDetails(props: ErrorDetailsProps) {
+export function ErrorDetails (props: ErrorDetailsProps) {
   return (
     <Screen
-      preset="fixed"
+      preset='fixed'
       safeAreaEdges={["top", "bottom"]}
       contentContainerStyle={$contentContainer}
     >
       <View style={$topSection}>
-        <Icon icon="ladybug" size={64} />
-        <Text style={$heading} preset="subheading" tx="errorScreen.title" />
-        <Text tx="errorScreen.friendlySubtitle" />
+        <Text style={$heading} preset='subheading' tx='errorScreen.title' />
+        <Text tx='errorScreen.friendlySubtitle' />
       </View>
 
       <ScrollView style={$errorSection} contentContainerStyle={$errorSectionContentContainer}>
-        <Text style={$errorContent} weight="bold" text={`${props.error}`.trim()} />
+        <Text style={$errorContent} weight='bold' text={`${props.error}`.trim()} />
         <Text
           selectable
           style={$errorBacktrace}
@@ -32,10 +31,10 @@ export function ErrorDetails(props: ErrorDetailsProps) {
       </ScrollView>
 
       <Button
-        preset="reversed"
+        preset='reversed'
         style={$resetButton}
         onPress={props.onReset}
-        tx="errorScreen.reset"
+        tx='errorScreen.reset'
       />
     </Screen>
   )
