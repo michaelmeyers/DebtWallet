@@ -83,11 +83,11 @@ export type ScreenProps = ScrollScreenProps | FixedScreenProps | AutoScreenProps
 
 const isIos = Platform.OS === "ios"
 
-function isNonScrolling(preset?: ScreenProps["preset"]) {
+function isNonScrolling (preset?: ScreenProps["preset"]) {
   return !preset || preset === "fixed"
 }
 
-function useAutoPreset(props: AutoScreenProps) {
+function useAutoPreset (props: AutoScreenProps) {
   const { preset, scrollEnabledToggleThreshold } = props
   const { percent = 0.92, point = 0 } = scrollEnabledToggleThreshold || {}
 
@@ -95,7 +95,7 @@ function useAutoPreset(props: AutoScreenProps) {
   const scrollViewContentHeight = useRef(null)
   const [scrollEnabled, setScrollEnabled] = useState(true)
 
-  function updateScrollState() {
+  function updateScrollState () {
     if (scrollViewHeight.current === null || scrollViewContentHeight.current === null) return
 
     // check whether content fits the screen then toggle scroll state according to it
@@ -114,13 +114,13 @@ function useAutoPreset(props: AutoScreenProps) {
     if (!scrollEnabled && !contentFitsScreen) setScrollEnabled(true)
   }
 
-  function onContentSizeChange(w: number, h: number) {
+  function onContentSizeChange (w: number, h: number) {
     // update scroll-view content height
     scrollViewContentHeight.current = h
     updateScrollState()
   }
 
-  function onLayout(e: LayoutChangeEvent) {
+  function onLayout (e: LayoutChangeEvent) {
     const { height } = e.nativeEvent.layout
     // update scroll-view  height
     scrollViewHeight.current = height
@@ -137,7 +137,7 @@ function useAutoPreset(props: AutoScreenProps) {
   }
 }
 
-function ScreenWithoutScrolling(props: ScreenProps) {
+function ScreenWithoutScrolling (props: ScreenProps) {
   const { style, contentContainerStyle, children } = props
   return (
     <View style={[$outerStyle, style]}>
@@ -146,7 +146,7 @@ function ScreenWithoutScrolling(props: ScreenProps) {
   )
 }
 
-function ScreenWithScrolling(props: ScreenProps) {
+function ScreenWithScrolling (props: ScreenProps) {
   const {
     children,
     keyboardShouldPersistTaps = "handled",
@@ -167,7 +167,7 @@ function ScreenWithScrolling(props: ScreenProps) {
     <ScrollView
       {...{ keyboardShouldPersistTaps, scrollEnabled, ref }}
       {...ScrollViewProps}
-      onLayout={(e) => {
+      onLayout={e => {
         onLayout(e)
         ScrollViewProps?.onLayout?.(e)
       }}
@@ -187,7 +187,7 @@ function ScreenWithScrolling(props: ScreenProps) {
   )
 }
 
-export function Screen(props: ScreenProps) {
+export function Screen (props: ScreenProps) {
   const {
     backgroundColor = colors.background,
     KeyboardAvoidingViewProps,

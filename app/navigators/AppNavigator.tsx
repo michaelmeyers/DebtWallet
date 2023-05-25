@@ -37,6 +37,7 @@ export type AppStackParamList = {
   Color: undefined
   Wallet: undefined
   WalletInput: undefined
+  CreateWallet: undefined
   // IGNITE_GENERATOR_ANCHOR_APP_STACK_PARAM_LIST
 }
 
@@ -56,10 +57,7 @@ const ColorStack = createNativeStackNavigator<AppStackParamList>()
 const ColorsNav = observer(function AppStack () {
   return (
     <ColorStack.Navigator screenOptions={{ navigationBarColor: colors.background }}>
-      {/** 🔥 Your screens go here */}
       <ColorStack.Screen name='Color' component={Screens.ColorScreen} />
-
-      {/* IGNITE_GENERATOR_ANCHOR_APP_STACK_SCREENS */}
     </ColorStack.Navigator>
   )
 })
@@ -67,10 +65,9 @@ const WalletsStack = createNativeStackNavigator<AppStackParamList>()
 const WalletsNav = observer(function AppStack () {
   return (
     <WalletsStack.Navigator screenOptions={{ navigationBarColor: colors.background }}>
-      {/** 🔥 Your screens go here */}
       <WalletsStack.Screen name='Wallet' component={Screens.WalletScreen} />
       <WalletsStack.Screen name='WalletInput' component={Screens.WalletInputScreen} />
-      {/* IGNITE_GENERATOR_ANCHOR_APP_STACK_SCREENS */}
+      <WalletsStack.Screen name='CreateWallet' component={Screens.CreateWalletScreen} />
     </WalletsStack.Navigator>
   )
 })
@@ -79,10 +76,8 @@ const TabStack = createBottomTabNavigator<TabStackParamList>()
 const AppStack = observer(function AppStack () {
   return (
     <TabStack.Navigator screenOptions={{ headerShown: false }}>
-      {/** 🔥 Your screens go here */}
       <TabStack.Screen name='Wallets' component={WalletsNav} />
       <TabStack.Screen name='Colors' component={ColorsNav} />
-      {/* IGNITE_GENERATOR_ANCHOR_APP_STACK_SCREENS */}
     </TabStack.Navigator>
   )
 })
