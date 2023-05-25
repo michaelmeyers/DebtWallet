@@ -3,7 +3,7 @@ import { TextStyle, View, ViewStyle, Pressable, ActivityIndicator, Keyboard } fr
 import { observer } from "mobx-react-lite"
 import { colors, spacing } from "../theme"
 import { Text } from "./"
-import FontAwesome from "@expo/vector-icons/FontAwesome"
+import FontAwesome from "@fortawesome/react-native-fontawesome"
 
 const waitTimeBeforeButtonIsEnabledAgain = 500
 const enum ButtonEnumType {
@@ -13,25 +13,25 @@ const enum ButtonEnumType {
 }
 
 export interface LoadingButtonProps {
-  containerStyle?: ViewStyle
-  labelStyle?: TextStyle
   onPress: (any?) => void
+  containerStyle?: ViewStyle
   label: string
+  labelStyle?: TextStyle
   iconName: Array<string>
+  iconContainerStyle?: ViewStyle
   type?: "solid" | "outline" | "clear"
   color?: string
-  iconContainerStyle?: ViewStyle
   disabled?: boolean
-  iconRight?: boolean
   loading?: boolean
+  iconRight?: boolean
   changeBackgroundOnDisable?: boolean
 }
 
 export const LoadingButton = observer(function LoadingButton (props: LoadingButtonProps) {
   const {
     containerStyle,
-    labelStyle,
     label,
+    labelStyle,
     iconName,
     iconContainerStyle,
     onPress,
