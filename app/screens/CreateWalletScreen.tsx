@@ -4,6 +4,7 @@ import { View, ViewStyle, TextInput } from "react-native"
 import { NativeStackScreenProps } from "@react-navigation/native-stack"
 import { AppStackScreenProps } from "app/navigators"
 import { LoadingButton, Screen, Text } from "app/components"
+import { SecureStore } from "app/models/SecureStore"
 
 // Import the crypto getRandomValues shim (**BEFORE** the shims)
 import "react-native-get-random-values"
@@ -16,7 +17,7 @@ import { spacing } from "app/theme"
 // TODO: STILL NEED TO FIGURE OUT HOW IT IMPORT ETHERS.... CURRENTLY NOT WORKING
 
 // import { useNavigation } from "@react-navigation/native"
-// import { useStores } from "app/models"
+import { useStores } from "app/models"
 
 interface CreateWalletScreenProps
   extends NativeStackScreenProps<AppStackScreenProps<"CreateWallet">> {}
@@ -24,12 +25,14 @@ interface CreateWalletScreenProps
 export const CreateWalletScreen: FC<CreateWalletScreenProps> = observer(
   function CreateWalletScreen () {
     // Pull in one of our MST stores
-    // const { someStore, anotherStore } = useStores()
+    const { walletStore } = useStores()
 
     // Pull in navigation via hook
     // const navigation = useNavigation()
     const [wallet, setWallet] = useState()
     const [inputMnemonic, setInputMnemonic] = useState()
+    const [saving, setSaving] = useState(false)
+    const { address, privateKey, publicKey, mnemonic } = wallet || {}
 
     const handleCreateWallet = () => {
       const newWallet = ethers.Wallet.createRandom()
@@ -44,7 +47,20 @@ export const CreateWalletScreen: FC<CreateWalletScreenProps> = observer(
       }
     }
 
-    const handleWatchWallet = () => {}
+    const handleSaveWallet = async () => {
+      setSaving(true)
+      const success = await walletStore.saveWallet(mnemonic?.phrase, address)
+      if (success) {
+        getData()
+      }
+      setSaving(false)
+    }
+
+    const getData = async () => {
+      const data = await SecureStore.get()
+      const mnemonicPhrase = data?.[address]
+      console.log("MNEMONIC", mnemonicPhrase)
+    }
 
     console.log(wallet?.mnemonic?.phrase)
     return (
@@ -52,12 +68,20 @@ export const CreateWalletScreen: FC<CreateWalletScreenProps> = observer(
         <Text text='createWallet' />
         {wallet ? (
           <View>
-            <Text>{`Address: ${wallet?.address}`}</Text>
-            <Text>{`PrivateKey: ${wallet?.privateKey}`}</Text>
-            <Text>{`PublicKey: ${wallet?.publicKey}`}</Text>
-            <Text>{`Mnemoinc: ${wallet?.mnemonic.phrase}`}</Text>
-            <View style={$BUTTON_VIEW}>
-              <LoadingButton label='Clear Wallet' onPress={() => setWallet(null)} />
+            <Text>{`Address: ${address}`}</Text>
+            <Text>{`PrivateKey: ${privateKey}`}</Text>
+            <Text>{`PublicKey: ${publicKey}`}</Text>
+            <Text>{`Mnemonic: ${mnemonic?.phrase}`}</Text>
+            <View style={{ flex: 1 }}>
+              <View style={$BUTTON_VIEW}>
+                <LoadingButton label='Save Wallet' onPress={handleSaveWallet} loading={saving} />
+              </View>
+              <View style={$BUTTON_VIEW}>
+                <LoadingButton label='Clear Wallet' onPress={() => setWallet(null)} />
+              </View>
+              <View style={$BUTTON_VIEW}>
+                <LoadingButton label='Secure Data' onPress={getData} />
+              </View>
             </View>
           </View>
         ) : (
@@ -75,9 +99,6 @@ export const CreateWalletScreen: FC<CreateWalletScreenProps> = observer(
               </View>
               <LoadingButton label='Import Wallet' onPress={handleImportWallet} />
             </View>
-            <View style={$BUTTON_VIEW}>
-              <LoadingButton label='Watcher Wallet' onPress={handleWatchWallet} />
-            </View>
           </View>
         )}
       </Screen>
@@ -89,4 +110,4 @@ const $root: ViewStyle = {
   flex: 1,
 }
 
-const $BUTTON_VIEW: Viewstyle = { paddingVertical: spacing.md }
+const $BUTTON_VIEW: Viewstyle = { paddingVertical: spacing.md, height: 100 }
