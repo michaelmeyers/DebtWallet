@@ -50,16 +50,21 @@ export const CreateWalletScreen: FC<CreateWalletScreenProps> = observer(
     const handleSaveWallet = async () => {
       setSaving(true)
       const success = await walletStore.saveWallet(mnemonic?.phrase, address)
-      if (success) {
-        getData()
-      }
+      console.log("SUCCESS", success)
       setSaving(false)
     }
 
     const getData = async () => {
-      const data = await SecureStore.get()
-      const mnemonicPhrase = data?.[address]
-      console.log("MNEMONIC", mnemonicPhrase)
+      const data = await SecureStore.getData(address)
+      console.log("MNEMONIC", data)
+    }
+
+    const handleDeleteData = async () => {
+      await SecureStore.deleteData(address)
+      const data = await SecureStore.getData(address)
+      if (!data) {
+        setWallet(null)
+      }
     }
 
     console.log(wallet?.mnemonic?.phrase)
@@ -80,7 +85,10 @@ export const CreateWalletScreen: FC<CreateWalletScreenProps> = observer(
                 <LoadingButton label='Clear Wallet' onPress={() => setWallet(null)} />
               </View>
               <View style={$BUTTON_VIEW}>
-                <LoadingButton label='Secure Data' onPress={getData} />
+                <LoadingButton label='Get Data' onPress={getData} />
+              </View>
+              <View style={$BUTTON_VIEW}>
+                <LoadingButton label='Delete Data' onPress={handleDeleteData} />
               </View>
             </View>
           </View>

@@ -1,40 +1,40 @@
-import * as Keychain from "react-native-keychain"
+import * as ExpoSecureStore from "expo-secure-store"
 
-const get = async () => {
+export enum SecureStoreKey {
+  pin = "PIN",
+}
+
+const getData = async key => {
   try {
-    // Retrieve the credentials
-    const secureData = await Keychain.getGenericPassword()
-    const { password: json } = secureData
-    if (json) {
-      const mnemonicsByWalletAddress = JSON.parse(json)
-      return mnemonicsByWalletAddress
-    } else {
-      console.log("No credentials stored")
-    }
+    const data = await ExpoSecureStore.getItemAsync(key)
+    return data
   } catch (error) {
-    console.error("Keychain couldn't be accessed!", error)
+    console.error("Data couldn't be accessed!", error)
   }
 }
 
-const save = async ({ address, mnemonic }) => {
+const saveData = async (key, value) => {
   try {
-    const secureData = await Keychain.getGenericPassword()
-    const { username, password: securedJson } = secureData
-    let mnemonicsByWalletAddress = {}
-    if (username && securedJson) {
-      mnemonicsByWalletAddress = JSON.parse(securedJson)
-    }
-    mnemonicsByWalletAddress[address] = mnemonic
-    const json = JSON.stringify(mnemonicsByWalletAddress)
-    await Keychain.setGenericPassword("MNEMONIC", json)
+    await ExpoSecureStore.setItemAsync(key, value)
     return true
   } catch (error) {
-    // error
+    console.error(error)
+    return false
+  }
+}
+
+const deleteData = async key => {
+  try {
+    await ExpoSecureStore.deleteItemAsync(key)
+    return true
+  } catch (error) {
+    console.error(error)
     return false
   }
 }
 
 export const SecureStore = {
-  get,
-  save,
+  getData,
+  saveData,
+  deleteData,
 }

@@ -83,7 +83,7 @@ export const WalletsStoreModel = types
         const wallet = { nickname, address }
         const saved = addWallet(wallet)
         if (saved) {
-          await SecureStore.save({ address, mnemonic })
+          await SecureStore.saveData(address, mnemonic)
         }
         return true
       } catch (error) {
