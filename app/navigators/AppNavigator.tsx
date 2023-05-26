@@ -7,8 +7,8 @@
 import { DarkTheme, DefaultTheme, NavigationContainer } from "@react-navigation/native"
 import { createNativeStackNavigator, NativeStackScreenProps } from "@react-navigation/native-stack"
 import { observer } from "mobx-react-lite"
-import React from "react"
-import { View, useColorScheme } from "react-native"
+import React, { useEffect, useRef, useState } from "react"
+import { AppState, useColorScheme } from "react-native"
 import * as Screens from "app/screens"
 import Config from "../config"
 import { navigationRef, useBackButtonHandler } from "./navigationUtilities"
@@ -87,10 +87,28 @@ export interface NavigationProps
 
 export const AppNavigator = observer(function AppNavigator (props: NavigationProps) {
   const colorScheme = useColorScheme()
-
   useBackButtonHandler(routeName => exitRoutes.includes(routeName))
+  const [authenticated, setAuthenticated] = useState(false)
 
-  return (
+  useEffect(() => {
+    const subscription = AppState.addEventListener("change", nextAppState => {
+      if (nextAppState.match(/inactive|background/)) {
+        setTimeout(() => {
+          setAuthenticated(false)
+        }, 500)
+      }
+    })
+
+    return () => {
+      subscription.remove()
+    }
+  }, [])
+
+  const handleAuthenticate = auth => {
+    setAuthenticated(auth)
+  }
+
+  return authenticated ? (
     <NavigationContainer
       ref={navigationRef}
       theme={colorScheme === "dark" ? DarkTheme : DefaultTheme}
@@ -98,10 +116,7 @@ export const AppNavigator = observer(function AppNavigator (props: NavigationPro
     >
       <AppStack />
     </NavigationContainer>
+  ) : (
+    <Screens.AuthScreen onAuthenticate={handleAuthenticate} />
   )
 })
-
-const GREEN_SCREEN = {
-  flex: 1,
-  backgroundColor: "green",
-}
