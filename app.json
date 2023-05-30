@@ -53,7 +53,13 @@
       }
     },
     "plugins": [
-      "expo-localization"
+      "expo-localization",
+      [
+        "expo-local-authentication",
+        {
+          "faceIDPermission": "Allow Debt Wallet to use Face ID."
+        }
+      ]
     ]
   }
 }

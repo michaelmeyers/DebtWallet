@@ -3,3 +3,15 @@ import "react-native-get-random-values"
 import "@ethersproject/shims"
 // Import the ethers library
 import { ethers } from "ethers"
+
+const { Wallet } = ethers
+
+export const createWallet = () => {
+  return ethers.Wallet.createRandom()
+}
+
+export const getWalletWithMnemonic = () => {}
+
+export const getWalletWithPrivateKey = () => {}
+
+export const getWatcherWallet = () => {}

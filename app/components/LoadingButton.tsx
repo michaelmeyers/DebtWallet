@@ -17,7 +17,7 @@ export interface LoadingButtonProps {
   containerStyle?: ViewStyle
   label: string
   labelStyle?: TextStyle
-  iconName: Array<string>
+  iconName?: Array<string>
   iconContainerStyle?: ViewStyle
   type?: "solid" | "outline" | "clear"
   color?: string
