@@ -7,12 +7,12 @@
 import { DarkTheme, DefaultTheme, NavigationContainer } from "@react-navigation/native"
 import { createNativeStackNavigator, NativeStackScreenProps } from "@react-navigation/native-stack"
 import { observer } from "mobx-react-lite"
-import React, { useEffect, useRef, useState } from "react"
-import { AppState, useColorScheme } from "react-native"
+import React, { useEffect, useState } from "react"
+import { AppState, useColorScheme, Modal } from "react-native"
 import * as Screens from "app/screens"
 import Config from "../config"
 import { navigationRef, useBackButtonHandler } from "./navigationUtilities"
-import { colors } from "app/theme"
+import { colors, styles } from "app/theme"
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs"
 
 /**
@@ -34,10 +34,11 @@ export type TabStackParamList = {
 }
 export type AppStackParamList = {
   // 🔥 Your screens go here
-  Color: undefined
-  Wallet: undefined
-  WalletInput: undefined
-  CreateWallet: undefined
+  color: undefined
+  wallet: undefined
+  walletInput: undefined
+  createWallet: undefined
+  wallets: undefined
   // IGNITE_GENERATOR_ANCHOR_APP_STACK_PARAM_LIST
 }
 
@@ -57,7 +58,7 @@ const ColorStack = createNativeStackNavigator<AppStackParamList>()
 const ColorsNav = observer(function AppStack () {
   return (
     <ColorStack.Navigator screenOptions={{ navigationBarColor: colors.background }}>
-      <ColorStack.Screen name='Color' component={Screens.ColorScreen} />
+      <ColorStack.Screen name='color' component={Screens.ColorScreen} />
     </ColorStack.Navigator>
   )
 })
@@ -65,9 +66,10 @@ const WalletsStack = createNativeStackNavigator<AppStackParamList>()
 const WalletsNav = observer(function AppStack () {
   return (
     <WalletsStack.Navigator screenOptions={{ navigationBarColor: colors.background }}>
-      <WalletsStack.Screen name='Wallet' component={Screens.WalletScreen} />
-      <WalletsStack.Screen name='WalletInput' component={Screens.WalletInputScreen} />
-      <WalletsStack.Screen name='CreateWallet' component={Screens.CreateWalletScreen} />
+      <WalletsStack.Screen name='wallet' component={Screens.WalletScreen} />
+      <WalletsStack.Screen name='walletInput' component={Screens.WalletInputScreen} />
+      <WalletsStack.Screen name='createWallet' component={Screens.CreateWalletScreen} />
+      <WalletsStack.Screen name='wallets' component={Screens.WalletsScreen} />
     </WalletsStack.Navigator>
   )
 })
@@ -108,15 +110,16 @@ export const AppNavigator = observer(function AppNavigator (props: NavigationPro
     setAuthenticated(auth)
   }
 
-  return authenticated ? (
+  return (
     <NavigationContainer
       ref={navigationRef}
       theme={colorScheme === "dark" ? DarkTheme : DefaultTheme}
       {...props}
     >
+      <Modal visible={!authenticated} style={styles.FLEX}>
+        <Screens.AuthScreen onAuthenticate={handleAuthenticate} />
+      </Modal>
       <AppStack />
     </NavigationContainer>
-  ) : (
-    <Screens.AuthScreen onAuthenticate={handleAuthenticate} />
   )
 })

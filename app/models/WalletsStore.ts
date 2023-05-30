@@ -1,4 +1,4 @@
-import { Instance, SnapshotIn, SnapshotOut, types } from "mobx-state-tree"
+import { Instance, SnapshotIn, SnapshotOut, flow, types } from "mobx-state-tree"
 import { withSetPropAction } from "./helpers/withSetPropAction"
 import { isBlank } from "app/utils/helpers"
 import { SecureStore } from "app/models/SecureStore"
@@ -59,6 +59,9 @@ export const WalletsStoreModel = types
     return views
   }) // eslint-disable-line @typescript-eslint/no-unused-vars
   .actions(self => {
+    const setSelectedWalletAddress = (address: string) => {
+      self.selectedWalletAddress = address
+    }
     const addWallet = (wallet: Wallet) => {
       try {
         self.wallets.push(wallet)
@@ -77,24 +80,44 @@ export const WalletsStoreModel = types
         return false
       }
     }
-    const saveWallet = async (mnemonic, address, userNickname?) => {
+
+    const deleteWallet = flow(function* (wallet) {
       try {
-        const nickname = userNickname || self.nextWalletNickname
-        const wallet = { nickname, address }
-        const saved = addWallet(wallet)
-        if (saved) {
-          await SecureStore.saveData(address, mnemonic)
+        const successful = removeWallet(wallet)
+        if (successful) {
+          yield SecureStore.deleteData(wallet.address)
         }
         return true
       } catch (error) {
         console.error(error)
         return false
       }
-    }
+    })
+
+    const saveWallet = flow(function* (mnemonic, address, userNickname?) {
+      try {
+        const nickname = userNickname || self.nextWalletNickname
+        const wallet = { nickname, address }
+        const saved = addWallet(wallet)
+        if (saved) {
+          yield SecureStore.saveData(address, mnemonic)
+          if (!self.selectedWalletAddress) {
+            setSelectedWalletAddress(address)
+          }
+        }
+        return true
+      } catch (error) {
+        console.error(error)
+        return false
+      }
+    })
+
     return {
+      setSelectedWalletAddress,
       addWallet,
       removeWallet,
       saveWallet,
+      deleteWallet,
     }
   }) // eslint-disable-line @typescript-eslint/no-unused-vars
 

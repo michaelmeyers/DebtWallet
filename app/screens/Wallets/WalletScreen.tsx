@@ -17,13 +17,20 @@ export const WalletScreen: FC<WalletScreenProps> = observer(function WalletScree
   const navigation = useNavigation()
 
   const handleNavToCreateWallet = () => {
-    navigation.navigate("CreateWallet")
+    navigation.navigate("createWallet")
+  }
+
+  const handleNavToWallets = () => {
+    navigation.navigate("wallets")
   }
   return (
     <Screen style={$ROOT} preset='scroll'>
       <Text text='wallet' />
       <View style={$SPACER_VIEW}>
         <LoadingButton label='Add Wallet' onPress={handleNavToCreateWallet} />
+      </View>
+      <View style={$SPACER_VIEW}>
+        <LoadingButton label='All Wallets' onPress={handleNavToWallets} />
       </View>
     </Screen>
   )
