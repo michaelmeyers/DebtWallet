@@ -12,6 +12,7 @@ export const AuthStoreModel = types
     attempts: 0,
     backoffAttempts: 0,
     backoffStartTime: types.maybeNull(types.string),
+    authenticatedAt: types.maybeNull(types.string),
   })
   .actions(withSetPropAction)
   .views(self => {
@@ -43,6 +44,10 @@ export const AuthStoreModel = types
     const setBackoffStartTime = timestring => {
       self.backoffStartTime = timestring
     }
+    const setAuthenticatedAt = timestring => {
+      self.authenticatedAt = timestring
+    }
+
     const reset = () => {
       self.attempts = 0
       self.backoffAttempts = 0
@@ -53,6 +58,7 @@ export const AuthStoreModel = types
       incrementBackoff,
       setBackoffAttempts,
       setBackoffStartTime,
+      setAuthenticatedAt,
       reset,
     }
   }) // eslint-disable-line @typescript-eslint/no-unused-vars

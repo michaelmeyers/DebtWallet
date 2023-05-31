@@ -12,6 +12,8 @@ export enum AuthTypes {
 export const SettingModel = types
   .model("Setting", {
     enable: types.boolean,
+    groupId: types.string,
+    label: types.string,
   })
   .actions(self => {
     const update = (key, value) => {
@@ -22,34 +24,46 @@ export const SettingModel = types
     }
   })
 
-export const AppLockSettingModel = types
-  .model("AppLock", {
-    enable: types.boolean,
-    validationTimer: types.number,
-    authType: types.enumeration([AuthTypes.pin, AuthTypes.bio]),
-  })
-  .actions(self => {
-    // Need to figure out how to not duplicate this update()
-    const update = (key, value) => {
-      self[key] = value
-    }
-    return {
-      update,
-    }
-  })
+export const AppLockSettingModel = types.model("AppLock", {
+  validationTimer: types.number,
+  authType: types.enumeration([AuthTypes.pin, AuthTypes.bio]),
+})
+
 export interface AppLockSetting extends Instance<typeof AppLockSettingModel> {}
 
 export const SettingsStoreModel = types
   .model("SettingsStore")
   .props({
-    appLock: types.optional(AppLockSettingModel, {
+    appLock: types.optional(types.compose(AppLockSettingModel, SettingModel), {
       enable: true,
       validationTimer: 0,
       authType: AuthTypes.pin,
-    } as AppLockSetting),
+      groupId: "Security",
+      label: "Security",
+    }),
   })
   .actions(withSetPropAction)
-  .views(self => ({})) // eslint-disable-line @typescript-eslint/no-unused-vars
+  .views(self => {
+    const views = {
+      get settings () {
+        return Object.entries(self).map(([key, value]) => {
+          return {
+            key,
+            ...value,
+          }
+        })
+      },
+      get settingsByLabel () {
+        return Object.entries(self).map(([key, value]) => {
+          return {
+            key,
+            ...value,
+          }
+        })
+      },
+    }
+    return views
+  }) // eslint-disable-line @typescript-eslint/no-unused-vars
   .actions(self => ({})) // eslint-disable-line @typescript-eslint/no-unused-vars
 
 export interface SettingsStore extends Instance<typeof SettingsStoreModel> {}

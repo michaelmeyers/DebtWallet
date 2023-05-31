@@ -38,10 +38,10 @@ export const AuthScreen: FC<AuthScreenProps> = observer(function AuthScreen ({
   useEffect(() => {
     if (disabled) {
       console.log("BLURR")
-      pinInput.current.blur()
+      pinInput?.current?.blur()
     } else {
       console.log("FOCUS")
-      pinInput.current.focus()
+      pinInput?.current?.focus()
     }
   }, [disabled])
 
@@ -51,7 +51,7 @@ export const AuthScreen: FC<AuthScreenProps> = observer(function AuthScreen ({
     }
     if (authType === AuthTypes.pin && !disabled) {
       console.log("FOCUS")
-      pinInput.current.focus()
+      pinInput?.current?.focus()
     }
   }, [usePin])
 
@@ -72,7 +72,7 @@ export const AuthScreen: FC<AuthScreenProps> = observer(function AuthScreen ({
       if (success) {
         onAuthenticate(true)
       } else {
-        shakeView.current.shake()
+        shakeView?.current?.shake()
         setUsePin(true)
       }
     }
@@ -84,7 +84,7 @@ export const AuthScreen: FC<AuthScreenProps> = observer(function AuthScreen ({
       reset()
       onAuthenticate(true)
     } else {
-      shakeView.current.shake()
+      shakeView?.current?.shake()
       setTimeout(() => {
         setPin("")
       }, 200)
@@ -97,7 +97,7 @@ export const AuthScreen: FC<AuthScreenProps> = observer(function AuthScreen ({
 
   const handleFocus = () => {
     if (usePin) {
-      pinInput.current.focus()
+      pinInput?.current?.focus()
     }
   }
 
@@ -127,7 +127,7 @@ export const AuthScreen: FC<AuthScreenProps> = observer(function AuthScreen ({
       ) : (
         <View style={$CONTENT}>
           <ShakeView ref={shakeView}>
-            <Image source={{ uri: image }} />
+            <View style={{ height: 50, width: 50, backgroundColor: "pink" }} />
           </ShakeView>
         </View>
       )}

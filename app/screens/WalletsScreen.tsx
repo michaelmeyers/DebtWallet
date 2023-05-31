@@ -9,7 +9,7 @@ import { useStores } from "app/models"
 import { styles } from "app/theme"
 import { SecureStore } from "app/models/SecureStore"
 
-interface WalletsScreenProps extends NativeStackScreenProps<AppStackScreenProps<"Wallets">> {}
+interface WalletsScreenProps extends NativeStackScreenProps<AppStackScreenProps<"wallets">> {}
 
 export const WalletsScreen: FC<WalletsScreenProps> = observer(function WalletsScreen () {
   // Pull in one of our MST stores

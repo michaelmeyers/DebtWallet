@@ -15,6 +15,8 @@ import { navigationRef, useBackButtonHandler } from "./navigationUtilities"
 import { colors, styles } from "app/theme"
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs"
 import { useStores } from "app/models"
+import moment from "moment"
+import { milliseconds } from "date-fns"
 
 /**
  * This type allows TypeScript to know what routes are defined in this navigator
@@ -32,7 +34,7 @@ import { useStores } from "app/models"
 export type TabStackParamList = {
   Wallets: undefined
   Colors: undefined
-  CreateWallet: undefined
+  Settings: undefined
 }
 export type AppStackParamList = {
   // 🔥 Your screens go here
@@ -41,6 +43,9 @@ export type AppStackParamList = {
   walletInput: undefined
   createWallet: undefined
   wallets: undefined
+  settings: undefined
+  CreateWallet: undefined
+  securitySettings: undefined
   // IGNITE_GENERATOR_ANCHOR_APP_STACK_PARAM_LIST
 }
 
@@ -66,6 +71,19 @@ const ColorsStack = observer(function AppStack () {
     <ColorsNav.Navigator screenOptions={{ navigationBarColor: colors.background }}>
       <ColorsNav.Screen name='color' component={Screens.ColorScreen} />
     </ColorsNav.Navigator>
+  )
+})
+
+const SettingsNav = createNativeStackNavigator<AppStackParamList>()
+const SettingsStack = observer(function SettingsStack () {
+  return (
+    <SettingsNav.Navigator
+      initialRouteName='settings'
+      screenOptions={{ navigationBarColor: colors.background }}
+    >
+      <SettingsNav.Screen name='settings' component={Screens.SettingsScreen} />
+      <SettingsNav.Screen name='securitySettings' component={Screens.SecuritySettingsScreen} />
+    </SettingsNav.Navigator>
   )
 })
 
@@ -103,6 +121,7 @@ const TabStack = observer(function AppStack () {
     <TabNav.Navigator screenOptions={{ headerShown: false }}>
       <TabNav.Screen name='Wallets' component={WalletsStack} />
       <TabNav.Screen name='Colors' component={ColorsStack} />
+      <TabNav.Screen name='Settings' component={SettingsStack} />
     </TabNav.Navigator>
   )
 })
@@ -111,7 +130,11 @@ const SetupNav = createNativeStackNavigator<AuthStackParamList>()
 const SetupStack = observer(function SetupStack () {
   return (
     <SetupNav.Navigator>
-      <SetupNav.Screen name={"CreateWallet"} component={CreateWalletStack} />
+      <SetupNav.Screen
+        options={{ headerShown: false }}
+        name={"CreateWallet"}
+        component={CreateWalletStack}
+      />
     </SetupNav.Navigator>
   )
 })
@@ -121,11 +144,12 @@ export interface NavigationProps
 
 export const AppNavigator = observer(function AppNavigator (props: NavigationProps) {
   const colorScheme = useColorScheme()
-  const { walletStore, settingsStore } = useStores()
+  const { walletStore, settingsStore, authStore } = useStores()
   const { selectedWalletAddress } = walletStore
   const { appLock } = settingsStore
+  const { authenticatedAt, setAuthenticatedAt } = authStore
+  const [authenticated, setAuthenticated] = useState(false)
   useBackButtonHandler(routeName => exitRoutes.includes(routeName))
-  const [authenticated, setAuthenticated] = useState()
 
   useEffect(() => {
     const subscription = AppState.addEventListener("change", nextAppState => {
@@ -133,6 +157,17 @@ export const AppNavigator = observer(function AppNavigator (props: NavigationPro
         setTimeout(() => {
           setAuthenticated(false)
         }, 500)
+      }
+      if (nextAppState === "active") {
+        const diff = moment().diff(authenticatedAt, "milliseconds")
+        console.log("DIFF", diff)
+        if (
+          appLock.validationTimer &&
+          authenticatedAt &&
+          moment().diff(authenticatedAt, "milliseconds") < appLock.validationTimer
+        ) {
+          setAuthenticated(true)
+        }
       }
     })
 
@@ -143,9 +178,13 @@ export const AppNavigator = observer(function AppNavigator (props: NavigationPro
 
   const handleAuthenticate = auth => {
     setAuthenticated(auth)
+    if (auth) {
+      setAuthenticatedAt(moment().toISOString())
+    }
   }
 
-  const lock = selectedWalletAddress && !authenticated
+  const lock = appLock.enable && !!selectedWalletAddress && !authenticated
+  console.log("LOCK", lock)
   const AppStack = selectedWalletAddress ? <TabStack /> : <SetupStack />
   return (
     <NavigationContainer
