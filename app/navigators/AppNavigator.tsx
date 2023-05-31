@@ -88,7 +88,7 @@ const WalletsStack = observer(function AppStack () {
     <WalletsNav.Navigator screenOptions={{ navigationBarColor: colors.background }}>
       <WalletsNav.Screen name='wallet' component={Screens.WalletScreen} />
       <WalletsNav.Screen
-        options={{ presentation: "modal" }}
+        options={{ presentation: "modal", headerShown: false }}
         name='createWallet'
         component={CreateWalletStack}
       />
@@ -125,7 +125,7 @@ export const AppNavigator = observer(function AppNavigator (props: NavigationPro
   const { selectedWalletAddress } = walletStore
   const { appLock } = settingsStore
   useBackButtonHandler(routeName => exitRoutes.includes(routeName))
-  const [authenticated, setAuthenticated] = useState(!appLock?.enable)
+  const [authenticated, setAuthenticated] = useState()
 
   useEffect(() => {
     const subscription = AppState.addEventListener("change", nextAppState => {

@@ -1,7 +1,14 @@
+import moment from "moment"
 import { AuthStoreModel } from "../AuthStore"
 
 test("can be created", () => {
-  const instance = AuthStoreModel.create({})
+  const instance = AuthStoreModel.create({
+    attempts: 5,
+    backoffAttempts: 5,
+    backoffStartTime: moment().toISOString(),
+  })
 
-  expect(instance).toBeTruthy()
+  const { backoffDurationInMiliseconds } = instance
+  console.log(backoffDurationInMiliseconds)
+  expect(backoffDurationInMiliseconds).toBeTruthy()
 })

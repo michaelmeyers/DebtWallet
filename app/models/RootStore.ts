@@ -1,5 +1,7 @@
 import { Instance, SnapshotOut, types } from "mobx-state-tree"
-import { SettingsStoreModel, AuthStoreModel, WalletsStoreModel } from "../models"
+import { SettingsStoreModel } from "./SettingsStore"
+import { WalletsStoreModel } from "./WalletsStore"
+import { AuthStoreModel } from "./AuthStore"
 
 /**
  * A RootStore model.

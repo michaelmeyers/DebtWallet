@@ -1,51 +1,68 @@
 import React, { FC, useEffect, useRef, useState } from "react"
 import { observer } from "mobx-react-lite"
-import { View, ViewStyle, Image } from "react-native"
-import { ShakeView, Text } from "app/components"
+import { View, ViewStyle, Image, Pressable } from "react-native"
+import { ShakeView, Text, LoadingButton } from "app/components"
 import * as LocalAuthentication from "expo-local-authentication"
 import { AuthTypes, useStores } from "app/models"
 import { PinInput } from "app/components/PinInput"
 import image from "../../ignite/templates/app-icon/ios-universal.png"
-import { durationInMiliseconds, userVisibleDuration } from "app/utils/timeout"
+import { userVisibleDuration } from "app/utils/timeout"
 
 interface AuthScreenProps {
   onAuthenticate: (auth: boolean) => void
 }
 
+const maxAttempts = 5
 export const AuthScreen: FC<AuthScreenProps> = observer(function AuthScreen ({
   onAuthenticate,
 }: AuthScreenProps) {
-  const { settingsStore } = useStores()
+  const { settingsStore, authStore } = useStores()
+  const {
+    attempts,
+    backoffAttempts,
+    backoffDurationInMiliseconds,
+    setAttempts,
+    incrementBackoff,
+    reset,
+  } = authStore
   const { appLock } = settingsStore || {}
   const { authType } = appLock
   const [usePin, setUsePin] = useState(authType === AuthTypes.pin)
-  const [attempts, setAttempts] = useState(5)
-  const [timeoutCount, setTimeoutCount] = useState(0)
 
   const shakeView = useRef()
   const pinInput = useRef()
-
+  const [attempted, setAttempted] = useState(false)
   const [pin, setPin] = useState("")
+  const [disabled, setDisabled] = useState(!!backoffDurationInMiliseconds)
+
+  useEffect(() => {
+    if (disabled) {
+      console.log("BLURR")
+      pinInput.current.blur()
+    } else {
+      console.log("FOCUS")
+      pinInput.current.focus()
+    }
+  }, [disabled])
 
   useEffect(() => {
     if (authType === AuthTypes.bio) {
       handleBioAuthenticate(!usePin)
     }
-    if (authType === AuthTypes.pin) {
+    if (authType === AuthTypes.pin && !disabled) {
+      console.log("FOCUS")
       pinInput.current.focus()
     }
-  }, [authType])
-
-  useEffect(() => {}, [attempts])
+  }, [usePin])
 
   useEffect(() => {
-    if (timeoutCount > 0) {
-      pinInput.current.blur()
+    if (backoffDurationInMiliseconds) {
+      setDisabled(true)
       setTimeout(() => {
-        pinInput.current.focus()
-      }, durationInMiliseconds[timeoutCount])
+        setDisabled(false)
+      }, backoffDurationInMiliseconds)
     }
-  }, [timeoutCount])
+  }, [backoffAttempts])
 
   const handleBioAuthenticate = async useFaceId => {
     // FACE ID ATTEMPTS STILL NEEDS TO BE FIGURED OUT
@@ -62,30 +79,39 @@ export const AuthScreen: FC<AuthScreenProps> = observer(function AuthScreen ({
   }
 
   const handleSubmit = () => {
+    setAttempted(true)
     if (pin === "000000") {
+      reset()
       onAuthenticate(true)
     } else {
       shakeView.current.shake()
       setTimeout(() => {
         setPin("")
       }, 200)
-      const nextAttempt = attempts - 1
-      if (attempts === 0 || nextAttempt === 0) {
-        setTimeoutCount(timeoutCount + 1)
-      }
-      if (attempts !== 0) {
-        setAttempts(nextAttempt)
+      setAttempts(attempts + 1)
+      if (attempts >= maxAttempts - 1) {
+        incrementBackoff()
       }
     }
   }
 
-  const pinText = timeoutCount
-    ? `Try after ${userVisibleDuration[timeoutCount]}.`
-    : attempts === 5
+  const handleFocus = () => {
+    if (usePin) {
+      pinInput.current.focus()
+    }
+  }
+
+  const pinText = backoffDurationInMiliseconds
+    ? `Try after ${userVisibleDuration[backoffAttempts]}.`
+    : !attempted
     ? "Enter Pin"
-    : `Incorrect Pin.  You have ${attempts} attempts left!`
+    : backoffAttempts
+    ? `Try after ${userVisibleDuration[backoffAttempts]}.`
+    : attempts
+    ? `Incorrect Pin.  You have ${maxAttempts - attempts} attempts left!`
+    : "Enter Pin"
   return (
-    <View style={$ROOT}>
+    <Pressable style={$ROOT} onPress={handleFocus} disabled={disabled}>
       {usePin ? (
         <View style={$CONTENT}>
           <Text>{pinText}</Text>
@@ -105,7 +131,8 @@ export const AuthScreen: FC<AuthScreenProps> = observer(function AuthScreen ({
           </ShakeView>
         </View>
       )}
-    </View>
+      <LoadingButton containerStyle={{ height: 50, width: 300 }} label='RESET' onPress={reset} />
+    </Pressable>
   )
 })
 
