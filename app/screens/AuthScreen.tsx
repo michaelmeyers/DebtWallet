@@ -7,6 +7,8 @@ import { AuthTypes, useStores } from "app/models"
 import { PinInput } from "app/components/PinInput"
 import image from "../../ignite/templates/app-icon/ios-universal.png"
 import { userVisibleDuration } from "app/utils/timeout"
+import { useFocusEffect } from "@react-navigation/native"
+import { spacing } from "app/theme"
 
 interface AuthScreenProps {
   onAuthenticate: (auth: boolean) => void
@@ -27,13 +29,12 @@ export const AuthScreen: FC<AuthScreenProps> = observer(function AuthScreen ({
   } = authStore
   const { appLock } = settingsStore || {}
   const { authType } = appLock
-  const [usePin, setUsePin] = useState(authType === AuthTypes.pin)
-
   const shakeView = useRef()
   const pinInput = useRef()
   const [attempted, setAttempted] = useState(false)
   const [pin, setPin] = useState("")
   const [disabled, setDisabled] = useState(!!backoffDurationInMiliseconds)
+  const [override, setOverride] = useState(false)
 
   useEffect(() => {
     if (disabled) {
@@ -45,15 +46,18 @@ export const AuthScreen: FC<AuthScreenProps> = observer(function AuthScreen ({
     }
   }, [disabled])
 
-  useEffect(() => {
-    if (authType === AuthTypes.bio) {
-      handleBioAuthenticate(!usePin)
-    }
-    if (authType === AuthTypes.pin && !disabled) {
-      console.log("FOCUS")
-      pinInput?.current?.focus()
-    }
-  }, [usePin])
+  useFocusEffect(
+    React.useCallback(() => {
+      setOverride(false)
+      if (authType === AuthTypes.bio) {
+        handleBioAuthenticate()
+      }
+      if (authType === AuthTypes.pin && !disabled) {
+        console.log("FOCUS")
+        pinInput?.current?.focus()
+      }
+    }, []),
+  )
 
   useEffect(() => {
     if (backoffDurationInMiliseconds) {
@@ -64,17 +68,15 @@ export const AuthScreen: FC<AuthScreenProps> = observer(function AuthScreen ({
     }
   }, [backoffAttempts])
 
-  const handleBioAuthenticate = async useFaceId => {
-    // FACE ID ATTEMPTS STILL NEEDS TO BE FIGURED OUT
-    // TRUST WALLET GIVES THEM TWO FACEID AND THEN THE PIN
-    if (useFaceId) {
-      const { success } = await LocalAuthentication.authenticateAsync()
-      if (success) {
-        onAuthenticate(true)
-      } else {
-        shakeView?.current?.shake()
-        setUsePin(true)
-      }
+  const handleBioAuthenticate = async () => {
+    const { success } = await LocalAuthentication.authenticateAsync()
+    if (success) {
+      onAuthenticate(true)
+    } else {
+      shakeView?.current?.shake()
+      setTimeout(() => {
+        setOverride(true)
+      }, 200)
     }
   }
 
@@ -96,12 +98,10 @@ export const AuthScreen: FC<AuthScreenProps> = observer(function AuthScreen ({
   }
 
   const handleFocus = () => {
-    if (usePin) {
-      pinInput?.current?.focus()
-    }
+    pinInput?.current?.focus()
   }
 
-  const pinText = backoffDurationInMiliseconds
+  const attemptsText = backoffDurationInMiliseconds
     ? `Try after ${userVisibleDuration[backoffAttempts]}.`
     : !attempted
     ? "Enter Pin"
@@ -112,9 +112,9 @@ export const AuthScreen: FC<AuthScreenProps> = observer(function AuthScreen ({
     : "Enter Pin"
   return (
     <Pressable style={$ROOT} onPress={handleFocus} disabled={disabled}>
-      {usePin ? (
+      {override || authType === AuthTypes.pin ? (
         <View style={$CONTENT}>
-          <Text>{pinText}</Text>
+          <Text>{attemptsText}</Text>
           <ShakeView ref={shakeView}>
             <PinInput
               ref={pinInput}
@@ -126,12 +126,18 @@ export const AuthScreen: FC<AuthScreenProps> = observer(function AuthScreen ({
         </View>
       ) : (
         <View style={$CONTENT}>
+          <Text>{attemptsText}</Text>
           <ShakeView ref={shakeView}>
             <View style={{ height: 50, width: 50, backgroundColor: "pink" }} />
           </ShakeView>
         </View>
       )}
       <LoadingButton containerStyle={{ height: 50, width: 300 }} label='RESET' onPress={reset} />
+      <LoadingButton
+        containerStyle={{ height: 50, width: 300 }}
+        label='AUTH'
+        onPress={() => onAuthenticate(true)}
+      />
     </Pressable>
   )
 })
