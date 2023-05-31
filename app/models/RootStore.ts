@@ -7,6 +7,7 @@ import { SettingsStoreModel, AuthStoreModel, WalletsStoreModel } from "../models
 export const RootStoreModel = types.model("RootStore").props({
   settingsStore: types.optional(SettingsStoreModel, {} as any),
   walletStore: types.optional(WalletsStoreModel, {} as any),
+  authStore: types.optional(AuthStoreModel, {} as any),
 })
 
 /**
