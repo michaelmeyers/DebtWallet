@@ -80,7 +80,6 @@ export const WalletsStoreModel = types
         return false
       }
     }
-
     const deleteWallet = flow(function* (wallet) {
       try {
         const successful = removeWallet(wallet)
@@ -93,7 +92,6 @@ export const WalletsStoreModel = types
         return false
       }
     })
-
     const saveWallet = flow(function* (mnemonic, address, userNickname?) {
       try {
         const nickname = userNickname || self.nextWalletNickname

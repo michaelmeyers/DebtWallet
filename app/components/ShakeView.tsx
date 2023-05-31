@@ -11,8 +11,9 @@ export interface ShakeViewProps extends ViewProps {
 /**
  * Describe your component here
  */
+const shakeValue = 10
 export const ShakeView = observer(
-  function ShakeView (props: ShakeViewProps, ref) {
+  React.forwardRef(function ShakeView (props: ShakeViewProps, ref) {
     const { style, children } = props
     const $styles = [$CONTAINER, style]
     const animation = React.useRef(new Animated.Value(0))
@@ -24,13 +25,13 @@ export const ShakeView = observer(
           Animated.sequence([
             // shift element to the left by 2 units
             Animated.timing(animation.current, {
-              toValue: -10,
+              toValue: -shakeValue,
               duration: 50,
               useNativeDriver: false,
             }),
             // shift element to the right by 2 units
             Animated.timing(animation.current, {
-              toValue: 10,
+              toValue: shakeValue,
               duration: 50,
               useNativeDriver: false,
             }),
@@ -52,8 +53,7 @@ export const ShakeView = observer(
         {children}
       </Animated.View>
     )
-  },
-  { forwardRef: true },
+  }),
 )
 
 const $CONTAINER: ViewStyle = {

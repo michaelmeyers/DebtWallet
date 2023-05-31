@@ -20,7 +20,7 @@ import { spacing } from "app/theme"
 import { useStores } from "app/models"
 
 interface CreateWalletScreenProps
-  extends NativeStackScreenProps<AppStackScreenProps<"CreateWallet">> {}
+  extends NativeStackScreenProps<AppStackScreenProps<"createWallet">> {}
 
 export const CreateWalletScreen: FC<CreateWalletScreenProps> = observer(
   function CreateWalletScreen () {

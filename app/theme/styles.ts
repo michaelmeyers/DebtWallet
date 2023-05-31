@@ -10,6 +10,10 @@ const FLEX_CENTERED: ViewStyle = {
   alignItems: "center",
 }
 
+const ROW: ViewStyle = {
+  flexDirection: "row",
+}
+
 const BUTTON: ViewStyle = {
   height: 50,
 }
@@ -17,5 +21,6 @@ const BUTTON: ViewStyle = {
 export const styles = {
   FLEX,
   FLEX_CENTERED,
+  ROW,
   BUTTON,
 }
