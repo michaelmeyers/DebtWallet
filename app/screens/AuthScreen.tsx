@@ -38,10 +38,8 @@ export const AuthScreen: FC<AuthScreenProps> = observer(function AuthScreen ({
 
   useEffect(() => {
     if (disabled) {
-      console.log("BLURR")
       pinInput?.current?.blur()
     } else {
-      console.log("FOCUS")
       pinInput?.current?.focus()
     }
   }, [disabled])
@@ -53,7 +51,6 @@ export const AuthScreen: FC<AuthScreenProps> = observer(function AuthScreen ({
         handleBioAuthenticate()
       }
       if (authType === AuthTypes.pin && !disabled) {
-        console.log("FOCUS")
         pinInput?.current?.focus()
       }
     }, []),

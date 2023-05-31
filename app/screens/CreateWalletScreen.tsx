@@ -40,7 +40,6 @@ export const CreateWalletScreen: FC<CreateWalletScreenProps> = observer(
     }
 
     const handleImportWallet = () => {
-      console.log(inputMnemonic)
       if (inputMnemonic) {
         const importedWallet = ethers.Wallet.fromMnemonic(inputMnemonic)
         setWallet(importedWallet)
@@ -50,13 +49,11 @@ export const CreateWalletScreen: FC<CreateWalletScreenProps> = observer(
     const handleSaveWallet = async () => {
       setSaving(true)
       const success = await walletStore.saveWallet(mnemonic?.phrase, address)
-      console.log("SUCCESS", success)
       setSaving(false)
     }
 
     const getData = async () => {
       const data = await SecureStore.getData(address)
-      console.log("MNEMONIC", data)
     }
 
     const handleDeleteData = async () => {
@@ -67,7 +64,6 @@ export const CreateWalletScreen: FC<CreateWalletScreenProps> = observer(
       }
     }
 
-    console.log(wallet?.mnemonic?.phrase)
     return (
       <Screen style={$root} preset='scroll'>
         <Text text='createWallet' />

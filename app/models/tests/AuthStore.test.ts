@@ -9,6 +9,5 @@ test("can be created", () => {
   })
 
   const { backoffDurationInMiliseconds } = instance
-  console.log(backoffDurationInMiliseconds)
   expect(backoffDurationInMiliseconds).toBeTruthy()
 })

@@ -160,7 +160,6 @@ export const AppNavigator = observer(function AppNavigator (props: NavigationPro
       }
       if (nextAppState === "active") {
         const diff = moment().diff(authenticatedAt, "milliseconds")
-        console.log("DIFF", diff)
         if (
           appLock.validationTimer &&
           authenticatedAt &&
@@ -184,7 +183,6 @@ export const AppNavigator = observer(function AppNavigator (props: NavigationPro
   }
 
   const lock = appLock.enable && !!selectedWalletAddress && !authenticated
-  console.log("LOCK", lock)
   const AppStack = selectedWalletAddress ? <TabStack /> : <SetupStack />
   return (
     <NavigationContainer

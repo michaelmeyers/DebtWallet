@@ -24,8 +24,7 @@ export const WalletsScreen: FC<WalletsScreenProps> = observer(function WalletsSc
     const addresses = wallets.map(({ address }) => address)
     for (let i = 0; i < addresses.length; i++) {
       const address = addresses[i]
-      const savedDataForAddress = await SecureStore.getData(address)
-      console.log(address, savedDataForAddress)
+      await SecureStore.getData(address)
     }
   }
 
