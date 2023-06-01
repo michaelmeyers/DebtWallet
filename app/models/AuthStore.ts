@@ -1,7 +1,7 @@
 import { Instance, SnapshotIn, SnapshotOut, types } from "mobx-state-tree"
 import { withSetPropAction } from "./helpers/withSetPropAction"
 import moment from "moment"
-import { durationInMiliseconds } from "../utils/timeout"
+import { durationInMiliseconds } from "../utils/durations"
 
 /**
  * Model description here for TypeScript hints.

@@ -6,7 +6,7 @@ import * as LocalAuthentication from "expo-local-authentication"
 import { AuthTypes, useStores } from "app/models"
 import { PinInput } from "app/components/PinInput"
 import image from "../../ignite/templates/app-icon/ios-universal.png"
-import { userVisibleDuration } from "app/utils/timeout"
+import { userVisibleDuration } from "app/utils/durations"
 import { useFocusEffect } from "@react-navigation/native"
 import { spacing } from "app/theme"
 
