@@ -36,13 +36,18 @@ export const SecuritySettingsScreen: FC<SecuritySettingsScreenProps> = observer(
           value={appLock.enable}
           onValueChange={value => handleSettingChange("enable", value)}
         />
-        <LoadingButton label={appLock.authType} onPress={toggle} />
+        <LoadingButton containerStyle={styles.BUTTON} label={appLock.authType} onPress={toggle} />
         <View>
           <Text>Lock Duration</Text>
           <Text>{appLock.validationTimer.toString()}</Text>
           <View style={styles.ROW}>
-            <LoadingButton label='NOW' onPress={() => handleSettingChange("validationTimer", 0)} />
             <LoadingButton
+              containerStyle={styles.BUTTON}
+              label='NOW'
+              onPress={() => handleSettingChange("validationTimer", 0)}
+            />
+            <LoadingButton
+              containerStyle={styles.BUTTON}
               label='1 MIN'
               onPress={() => handleSettingChange("validationTimer", 60000)}
             />

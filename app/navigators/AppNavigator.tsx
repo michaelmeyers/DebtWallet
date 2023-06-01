@@ -16,7 +16,6 @@ import { colors, styles } from "app/theme"
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs"
 import { useStores } from "app/models"
 import moment from "moment"
-import { milliseconds } from "date-fns"
 
 /**
  * This type allows TypeScript to know what routes are defined in this navigator
@@ -44,8 +43,11 @@ export type AppStackParamList = {
   createWallet: undefined
   wallets: undefined
   settings: undefined
-  CreateWallet: undefined
   securitySettings: undefined
+  mnemonicAcknowledgements: undefined
+  mnemonic: undefined
+  mnemonicOrder: undefined
+  CreateWallet: undefined
   // IGNITE_GENERATOR_ANCHOR_APP_STACK_PARAM_LIST
 }
 
@@ -96,6 +98,12 @@ const CreateWalletStack = observer(function AppStack () {
     >
       <CreateWalletNav.Screen name='createWallet' component={Screens.CreateWalletScreen} />
       <CreateWalletNav.Screen name='walletInput' component={Screens.WalletInputScreen} />
+      <CreateWalletNav.Screen name='mnemonic' component={Screens.MnemonicScreen} />
+      <CreateWalletNav.Screen name='mnemonicOrder' component={Screens.MnemonicOrderScreen} />
+      <CreateWalletNav.Screen
+        name='mnemonicAcknowledgements'
+        component={Screens.MnemonicAcknowledgementsScreen}
+      />
     </CreateWalletNav.Navigator>
   )
 })
@@ -107,7 +115,7 @@ const WalletsStack = observer(function AppStack () {
       <WalletsNav.Screen name='wallet' component={Screens.WalletScreen} />
       <WalletsNav.Screen
         options={{ presentation: "modal", headerShown: false }}
-        name='createWallet'
+        name='CreateWallet'
         component={CreateWalletStack}
       />
       <WalletsNav.Screen name='wallets' component={Screens.WalletsScreen} />
@@ -159,7 +167,6 @@ export const AppNavigator = observer(function AppNavigator (props: NavigationPro
         }, 500)
       }
       if (nextAppState === "active") {
-        const diff = moment().diff(authenticatedAt, "milliseconds")
         if (
           appLock.validationTimer &&
           authenticatedAt &&

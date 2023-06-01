@@ -1,6 +1,6 @@
 import React, { FC } from "react"
 import { observer } from "mobx-react-lite"
-import { ViewStyle } from "react-native"
+import { View, ViewStyle } from "react-native"
 import { NativeStackNavigationProp, NativeStackScreenProps } from "@react-navigation/native-stack"
 import { AppStackParamList, AppStackScreenProps } from "app/navigators"
 import { LoadingButton, Screen, Text } from "app/components"
@@ -23,7 +23,9 @@ export const SettingsScreen: FC<SettingsScreenProps> = observer(function Setting
   return (
     <Screen style={$root} preset='scroll'>
       <Text text='settings' />
-      <LoadingButton label='Security' onPress={handleNavToSecuritySettings} />
+      <View style={{ height: 50, width: 150 }}>
+        <LoadingButton label='Security' onPress={handleNavToSecuritySettings} />
+      </View>
     </Screen>
   )
 })

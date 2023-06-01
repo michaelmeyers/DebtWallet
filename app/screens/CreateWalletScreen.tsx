@@ -5,6 +5,8 @@ import { NativeStackScreenProps } from "@react-navigation/native-stack"
 import { AppStackScreenProps } from "app/navigators"
 import { LoadingButton, Screen, Text } from "app/components"
 import { SecureStore } from "app/models/SecureStore"
+import { useNavigation } from "@react-navigation/native"
+import { useStores } from "app/models"
 
 // Import the crypto getRandomValues shim (**BEFORE** the shims)
 import "react-native-get-random-values"
@@ -13,11 +15,6 @@ import "@ethersproject/shims"
 // Import the ethers library
 import { ethers } from "ethers"
 import { spacing } from "app/theme"
-
-// TODO: STILL NEED TO FIGURE OUT HOW IT IMPORT ETHERS.... CURRENTLY NOT WORKING
-
-// import { useNavigation } from "@react-navigation/native"
-import { useStores } from "app/models"
 
 interface CreateWalletScreenProps
   extends NativeStackScreenProps<AppStackScreenProps<"createWallet">> {}
@@ -28,11 +25,15 @@ export const CreateWalletScreen: FC<CreateWalletScreenProps> = observer(
     const { walletStore } = useStores()
 
     // Pull in navigation via hook
-    // const navigation = useNavigation()
+    const navigation = useNavigation()
     const [wallet, setWallet] = useState()
     const [inputMnemonic, setInputMnemonic] = useState()
     const [saving, setSaving] = useState(false)
     const { address, privateKey, publicKey, mnemonic } = wallet || {}
+
+    const handleNavToMnemonicAcknowledgements = () => {
+      navigation.navigate("mnemonicAcknowledgements")
+    }
 
     const handleCreateWallet = () => {
       const newWallet = ethers.Wallet.createRandom()
@@ -91,7 +92,7 @@ export const CreateWalletScreen: FC<CreateWalletScreenProps> = observer(
         ) : (
           <View style={{ flex: 1, justifyContent: "space-between" }}>
             <View style={$BUTTON_VIEW}>
-              <LoadingButton label='Create Wallet' onPress={handleCreateWallet} />
+              <LoadingButton label='Create Wallet' onPress={handleNavToMnemonicAcknowledgements} />
             </View>
             <View style={$BUTTON_VIEW}>
               <View>

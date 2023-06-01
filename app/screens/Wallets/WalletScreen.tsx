@@ -17,7 +17,7 @@ export const WalletScreen: FC<WalletScreenProps> = observer(function WalletScree
   const navigation = useNavigation()
 
   const handleNavToCreateWallet = () => {
-    navigation.navigate("createWallet")
+    navigation.navigate("CreateWallet")
   }
 
   const handleNavToWallets = () => {
@@ -41,7 +41,6 @@ const $ROOT: ViewStyle = {
 }
 
 const $SPACER_VIEW: ViewStyle = {
-  flex: 1,
   alignItems: "center",
   justifyContent: "space-around",
 }
