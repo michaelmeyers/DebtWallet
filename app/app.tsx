@@ -23,6 +23,16 @@ import { customFontsToLoad } from "./theme"
 import { setupReactotron } from "./services/reactotron"
 import Config from "./config"
 
+import { library } from "@fortawesome/fontawesome-svg-core"
+import { faCheck as falCheck } from "@fortawesome/pro-light-svg-icons"
+import {
+  faCheck as fasCheck,
+  faCaretRight as fasCaretRight,
+  faUserSecret as fasUserSecret,
+} from "@fortawesome/pro-solid-svg-icons"
+
+library.add(falCheck, fasCheck, fasCaretRight, fasUserSecret)
+
 // Set up Reactotron, which is a free desktop app for inspecting and debugging
 // React Native apps. Learn more here: https://github.com/infinitered/reactotron
 setupReactotron({
@@ -68,7 +78,7 @@ interface AppProps {
 /**
  * This is the root component of our app.
  */
-function App(props: AppProps) {
+function App (props: AppProps) {
   const { hideSplashScreen } = props
   const {
     initialNavigationState,

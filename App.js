@@ -3,7 +3,6 @@
 import App from "./app/app.tsx"
 import React from "react"
 import * as SplashScreen from "expo-splash-screen"
-
 SplashScreen.preventAutoHideAsync()
 
 function DebtWalletApp () {
