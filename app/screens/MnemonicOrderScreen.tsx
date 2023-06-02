@@ -5,7 +5,7 @@ import { NativeStackScreenProps } from "@react-navigation/native-stack"
 import { AppStackParamList, AppStackScreenProps } from "app/navigators"
 import { Screen, LoadingButton, MnemonicOrder } from "app/components"
 import { styles } from "app/theme"
-import { RouteProp, useRoute } from "@react-navigation/native"
+import { RouteProp, useRoute, useNavigation } from "@react-navigation/native"
 import { useStores } from "app/models"
 
 interface MnemonicOrderScreenProps
@@ -13,6 +13,7 @@ interface MnemonicOrderScreenProps
 
 export const MnemonicOrderScreen: FC<MnemonicOrderScreenProps> = observer(
   function MnemonicOrderScreen () {
+    const navigation = useNavigation()
     const { blockchainWallet } = useRoute<RouteProp<AppStackParamList, "mnemonicOrder">>()?.params
     const { mnemonic, address } = blockchainWallet || {}
     const { walletStore } = useStores()
@@ -22,8 +23,11 @@ export const MnemonicOrderScreen: FC<MnemonicOrderScreenProps> = observer(
       setdisabled(!isCorrect)
     }
 
-    const handleStoreWallet = () => {
-      walletStore.saveWallet(mnemonic?.phrase, address)
+    const handleStoreWallet = async () => {
+      const saved = await walletStore.saveWallet(mnemonic?.phrase, address)
+      if (saved) {
+        navigation.navigate("wallets")
+      }
     }
 
     return (

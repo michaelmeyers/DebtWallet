@@ -40,20 +40,20 @@ export type AppStackParamList = {
   // 🔥 Your screens go here
   color: undefined
   wallet: undefined
-  walletInput: undefined
-  createWallet: undefined
+  walletImport: undefined
+  walletAdd: undefined
   wallets: undefined
   settings: undefined
   securitySettings: undefined
   mnemonicAcknowledgements: undefined
   mnemonic: undefined
   mnemonicOrder: { blockchainWallet: BlockchainWallet }
-  CreateWallet: undefined
+  AddWallet: undefined
   // IGNITE_GENERATOR_ANCHOR_APP_STACK_PARAM_LIST
 }
 
 export type AuthStackParamList = {
-  CreateWallet: undefined
+  AddWallet: undefined
 }
 
 /**
@@ -90,22 +90,22 @@ const SettingsStack = observer(function SettingsStack () {
   )
 })
 
-const CreateWalletNav = createNativeStackNavigator<AppStackParamList>()
-const CreateWalletStack = observer(function AppStack () {
+const AddWalletNav = createNativeStackNavigator<AppStackParamList>()
+const AddWalletStack = observer(function AppStack () {
   return (
-    <CreateWalletNav.Navigator
-      initialRouteName='createWallet'
+    <AddWalletNav.Navigator
+      initialRouteName='walletAdd'
       screenOptions={{ navigationBarColor: colors.background }}
     >
-      <CreateWalletNav.Screen name='createWallet' component={Screens.CreateWalletScreen} />
-      <CreateWalletNav.Screen name='walletInput' component={Screens.WalletInputScreen} />
-      <CreateWalletNav.Screen name='mnemonic' component={Screens.MnemonicScreen} />
-      <CreateWalletNav.Screen name='mnemonicOrder' component={Screens.MnemonicOrderScreen} />
-      <CreateWalletNav.Screen
+      <AddWalletNav.Screen name='walletAdd' component={Screens.AddWalletScreen} />
+      <AddWalletNav.Screen name='walletImport' component={Screens.WalletImportScreen} />
+      <AddWalletNav.Screen name='mnemonic' component={Screens.MnemonicScreen} />
+      <AddWalletNav.Screen name='mnemonicOrder' component={Screens.MnemonicOrderScreen} />
+      <AddWalletNav.Screen
         name='mnemonicAcknowledgements'
         component={Screens.MnemonicAcknowledgementsScreen}
       />
-    </CreateWalletNav.Navigator>
+    </AddWalletNav.Navigator>
   )
 })
 
@@ -116,8 +116,8 @@ const WalletsStack = observer(function AppStack () {
       <WalletsNav.Screen name='wallet' component={Screens.WalletScreen} />
       <WalletsNav.Screen
         options={{ presentation: "modal", headerShown: false }}
-        name='CreateWallet'
-        component={CreateWalletStack}
+        name='AddWallet'
+        component={AddWalletStack}
       />
       <WalletsNav.Screen name='wallets' component={Screens.WalletsScreen} />
     </WalletsNav.Navigator>
@@ -141,8 +141,8 @@ const SetupStack = observer(function SetupStack () {
     <SetupNav.Navigator>
       <SetupNav.Screen
         options={{ headerShown: false }}
-        name={"CreateWallet"}
-        component={CreateWalletStack}
+        name={"AddWallet"}
+        component={AddWalletStack}
       />
     </SetupNav.Navigator>
   )

@@ -99,9 +99,7 @@ export const WalletsStoreModel = types
         const saved = addWallet(wallet)
         if (saved) {
           yield SecureStore.saveData(address, mnemonic)
-          if (!self.selectedWalletAddress) {
-            setSelectedWalletAddress(address)
-          }
+          setSelectedWalletAddress(address)
         }
         return true
       } catch (error) {

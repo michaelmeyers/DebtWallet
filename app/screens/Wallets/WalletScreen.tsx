@@ -5,19 +5,20 @@ import { NativeStackScreenProps } from "@react-navigation/native-stack"
 import { AppStackScreenProps } from "app/navigators"
 import { LoadingButton, Screen, Text } from "app/components"
 import { useNavigation } from "@react-navigation/native"
-// import { useStores } from "app/models"
+import { useStores } from "app/models"
 
 interface WalletScreenProps extends NativeStackScreenProps<AppStackScreenProps<"Wallet">> {}
 
 export const WalletScreen: FC<WalletScreenProps> = observer(function WalletScreen () {
-  // Pull in one of our MST stores
-  // const { someStore, anotherStore } = useStores()
-
   // Pull in navigation via hook
   const navigation = useNavigation()
+  // Pull in one of our MST stores
+  const { walletStore } = useStores()
+  const { selectedWalletAddress, walletsByAddress } = walletStore
+  const selectedWallet = walletsByAddress?.[selectedWalletAddress]
 
   const handleNavToCreateWallet = () => {
-    navigation.navigate("CreateWallet")
+    navigation.navigate("AddWallet")
   }
 
   const handleNavToWallets = () => {
@@ -25,7 +26,9 @@ export const WalletScreen: FC<WalletScreenProps> = observer(function WalletScree
   }
   return (
     <Screen style={$ROOT} preset='scroll'>
-      <Text text='wallet' />
+      <Text text='Selected Wallet' />
+      <Text>{selectedWallet.nickname}</Text>
+      <Text>{selectedWallet.address}</Text>
       <View style={$SPACER_VIEW}>
         <LoadingButton label='Add Wallet' onPress={handleNavToCreateWallet} />
       </View>
