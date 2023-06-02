@@ -16,6 +16,7 @@ import { colors, styles } from "app/theme"
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs"
 import { useStores } from "app/models"
 import moment from "moment"
+import { BlockchainWallet } from "app/services/api/blockchain"
 
 /**
  * This type allows TypeScript to know what routes are defined in this navigator
@@ -46,7 +47,7 @@ export type AppStackParamList = {
   securitySettings: undefined
   mnemonicAcknowledgements: undefined
   mnemonic: undefined
-  mnemonicOrder: undefined
+  mnemonicOrder: { blockchainWallet: BlockchainWallet }
   CreateWallet: undefined
   // IGNITE_GENERATOR_ANCHOR_APP_STACK_PARAM_LIST
 }

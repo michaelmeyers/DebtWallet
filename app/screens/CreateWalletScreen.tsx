@@ -1,19 +1,12 @@
 import React, { FC, useState } from "react"
 import { observer } from "mobx-react-lite"
-import { View, ViewStyle, TextInput } from "react-native"
+import { View, ViewStyle } from "react-native"
 import { NativeStackScreenProps } from "@react-navigation/native-stack"
 import { AppStackScreenProps } from "app/navigators"
 import { LoadingButton, Screen, Text } from "app/components"
 import { SecureStore } from "app/models/SecureStore"
 import { useNavigation } from "@react-navigation/native"
 import { useStores } from "app/models"
-
-// Import the crypto getRandomValues shim (**BEFORE** the shims)
-import "react-native-get-random-values"
-// Import the the ethers shims (**BEFORE** ethers)
-import "@ethersproject/shims"
-// Import the ethers library
-import { ethers } from "ethers"
 import { spacing } from "app/theme"
 
 interface CreateWalletScreenProps
@@ -33,11 +26,6 @@ export const CreateWalletScreen: FC<CreateWalletScreenProps> = observer(
 
     const handleNavToMnemonicAcknowledgements = () => {
       navigation.navigate("mnemonicAcknowledgements")
-    }
-
-    const handleCreateWallet = () => {
-      const newWallet = ethers.Wallet.createRandom()
-      setWallet(newWallet)
     }
 
     const handleImportWallet = () => {
@@ -66,53 +54,21 @@ export const CreateWalletScreen: FC<CreateWalletScreenProps> = observer(
     }
 
     return (
-      <Screen style={$root} preset='scroll'>
+      <Screen style={ROOT} preset='scroll'>
         <Text text='createWallet' />
-        {wallet ? (
-          <View>
-            <Text>{`Address: ${address}`}</Text>
-            <Text>{`PrivateKey: ${privateKey}`}</Text>
-            <Text>{`PublicKey: ${publicKey}`}</Text>
-            <Text>{`Mnemonic: ${mnemonic?.phrase}`}</Text>
-            <View style={{ flex: 1 }}>
-              <View style={$BUTTON_VIEW}>
-                <LoadingButton label='Save Wallet' onPress={handleSaveWallet} loading={saving} />
-              </View>
-              <View style={$BUTTON_VIEW}>
-                <LoadingButton label='Clear Wallet' onPress={() => setWallet(null)} />
-              </View>
-              <View style={$BUTTON_VIEW}>
-                <LoadingButton label='Get Data' onPress={getData} />
-              </View>
-              <View style={$BUTTON_VIEW}>
-                <LoadingButton label='Delete Data' onPress={handleDeleteData} />
-              </View>
-            </View>
+        <View style={{ flex: 1, justifyContent: "space-between" }}>
+          <View style={BUTTON_VIEW}>
+            <LoadingButton label='Create Wallet' onPress={handleNavToMnemonicAcknowledgements} />
+            <LoadingButton label='Import Wallet' onPress={handleImportWallet} />
           </View>
-        ) : (
-          <View style={{ flex: 1, justifyContent: "space-between" }}>
-            <View style={$BUTTON_VIEW}>
-              <LoadingButton label='Create Wallet' onPress={handleNavToMnemonicAcknowledgements} />
-            </View>
-            <View style={$BUTTON_VIEW}>
-              <View>
-                <TextInput
-                  style={{ borderWidth: 1, borderColor: "black" }}
-                  value={inputMnemonic}
-                  onChangeText={text => setInputMnemonic(text)}
-                />
-              </View>
-              <LoadingButton label='Import Wallet' onPress={handleImportWallet} />
-            </View>
-          </View>
-        )}
+        </View>
       </Screen>
     )
   },
 )
 
-const $root: ViewStyle = {
+const ROOT: ViewStyle = {
   flex: 1,
 }
 
-const $BUTTON_VIEW: Viewstyle = { paddingVertical: spacing.md, height: 100 }
+const BUTTON_VIEW: Viewstyle = { paddingVertical: spacing.md, height: 100 }
