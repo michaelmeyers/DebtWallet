@@ -2,6 +2,8 @@ import { Instance, SnapshotIn, SnapshotOut, flow, types } from "mobx-state-tree"
 import { withSetPropAction } from "./helpers/withSetPropAction"
 import { isBlank } from "app/utils/helpers"
 import { SecureStore } from "app/models/SecureStore"
+import { Abi } from "app/utils/abi"
+import Blockchain from "app/services/api/blockchain"
 
 export const WalletModel = types
   .model("Wallet", {
@@ -107,6 +109,45 @@ export const WalletsStoreModel = types
         return false
       }
     })
+    const getGasBalance = flow(function* (walletAddress, networkName) {
+      const mnemonic = yield SecureStore.getData(walletAddress)
+      const wallet = Blockchain.getWalletWithMnemonic(mnemonic)
+      const provider = yield Blockchain.getProvider(networkName)
+      const walletWithProvider = wallet.connect(provider)
+      const balance = yield walletWithProvider.getBalance()
+      return balance
+    })
+
+    const getContractBalanceForWallet = flow(function* (
+      contractAddress,
+      walletAddress,
+      networkName,
+    ) {
+      const provider = yield Blockchain.getProvider(networkName)
+      const contract = Blockchain.getContract(contractAddress, Abi.bep20, provider)
+      const balance = yield contract?.balanceOf(walletAddress)
+      return balance
+    })
+
+    const getContractBalancesForWallet = flow(function* (
+      contractAddresses,
+      walletAddress,
+      networkName,
+    ) {
+      const provider = yield Blockchain.getProvider(networkName)
+      const balances = []
+      for (let index = 0; index < contractAddresses.length; index++) {
+        const contractAddress = contractAddresses[index]
+        const contract = Blockchain.getContract(contractAddress, Abi.bep20, provider)
+        const balance = yield contract?.balanceOf(walletAddress)
+        if (balance) {
+          balances.push({
+            [contractAddress]: balance,
+          })
+        }
+      }
+      return balances
+    })
 
     return {
       setSelectedWalletAddress,
@@ -114,6 +155,9 @@ export const WalletsStoreModel = types
       removeWallet,
       saveWallet,
       deleteWallet,
+      getGasBalance,
+      getContractBalanceForWallet,
+      getContractBalancesForWallet,
     }
   }) // eslint-disable-line @typescript-eslint/no-unused-vars
 

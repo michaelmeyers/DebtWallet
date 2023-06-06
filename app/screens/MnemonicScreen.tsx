@@ -6,7 +6,7 @@ import { AppStackParamList, AppStackScreenProps } from "app/navigators"
 import { LoadingButton, MnemonicDisplay, Screen } from "app/components"
 import { styles } from "app/theme"
 import { useNavigation } from "@react-navigation/native"
-import BlockChain, { BlockchainWallet } from "app/services/api/blockchain"
+import Blockchain, { Wallet } from "app/services/api/blockchain"
 import * as Clipboard from "expo-clipboard"
 // import { useStores } from "app/models"
 
@@ -17,7 +17,7 @@ export const MnemonicScreen: FC<MnemonicScreenProps> = observer(function Mnemoni
   // const { someStore, anotherStore } = useStores()
 
   // Pull in navigation via hook
-  const [wallet, setWallet] = useState<BlockchainWallet>()
+  const [wallet, setWallet] = useState<Wallet>()
   const navigation = useNavigation<NativeStackNavigationProp<AppStackParamList>>()
   const handleContinue = () => {
     navigation.navigate("mnemonicOrder", { blockchainWallet: wallet })
@@ -30,7 +30,7 @@ export const MnemonicScreen: FC<MnemonicScreenProps> = observer(function Mnemoni
   }, [wallet])
 
   const handleCreateWallet = () => {
-    const newWallet = BlockChain.createWallet()
+    const newWallet = Blockchain.createWallet()
     setWallet(newWallet)
   }
 
